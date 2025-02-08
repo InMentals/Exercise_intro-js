@@ -28,11 +28,7 @@ const musicCatalog = () => {
    * @param {string} playlistName - The name of the new playlist.
    */
   const createPlaylist = (playlistName) => {
-    const newPlaylist = {
-      name: playlistName,
-      songs: []
-    };
-    playlists = [...playlists, newPlaylist];
+    playlists = [...playlists, {name: playlistName, songs: []}];
   };
 
   /**
@@ -59,11 +55,16 @@ const musicCatalog = () => {
    * @throws {Error} If the playlist is not found.
    */
   const addSongToPlaylist = (playlistName, song) => {
-    const playlist = playlists.find(pl => pl.name === playlistName);
+    const playlist = playlists.find(({name}) => name === playlistName);
     if(!playlist){
       throw new Error('Playlist not found');
     };
-    playlist.songs = [...playlist.songs, {...song, favorite: false}];
+    playlists = playlists.map((playListElement => {
+      if (playListElement.name === playlistName){
+        return {name: playListElement.name, songs: [...playListElement.songs, {...song, favorite: false}]};
+      };
+      return playListElement;
+    }));
   };
 
   /**
@@ -73,16 +74,27 @@ const musicCatalog = () => {
    * @throws {Error} If the playlist or song is not found.
    */
   const removeSongFromPlaylist = (playlistName, title) => {
-    const playlist = playlists.find(pl => pl.name);
-    playlist.songs = playlist.songs.filter(song => song.title!== title);
-  }
+    const playlist = playlists.find(({name}) => name === playlistName);
+    if(!playlist){
+      throw new Error('Playlist not found');
+    };
+    playlists = playlists.map((playListElement => {
+      if (playListElement.name === playlistName){
+        return {name: playListElement.name, songs: playListElement.songs.filter(song => song.title !== title)};
+      };
+      return playListElement;
+    }));
+  };
 
   /**
    * Marks a song as a favorite or removes the favorite status.
    * @param {string} playlistName - The name of the playlist containing the song.
    * @param {string} title - The title of the song to mark as a favorite.
    */
-  const favoriteSong = (playlistName, title) => {};
+  const favoriteSong = (playlistName, title) => {
+    const playlist = playlists.find(pl => pl.name === playlistName);
+    playlist.songs.find(song => song.title === title ).favorite = true;
+  }
 
   /**
    * Sorts songs in a specific playlist by a given criterion (title, artist, or duration).
@@ -97,21 +109,25 @@ const musicCatalog = () => {
 };
 
 
+
+//test
 const myCatalog = musicCatalog();
 myCatalog.createPlaylist('lista_1');
+myCatalog.createPlaylist('lista_2');
 console.log(myCatalog.getAllPlaylists());
 
 try {
   myCatalog.addSongToPlaylist('lista_1', {title :'title', artist: 'artist', genre: 'genre', duration: 4});
   myCatalog.addSongToPlaylist('lista_1', {title :'title1', artist: 'artist1', genre: 'genre1', duration: 5});
   myCatalog.addSongToPlaylist('lista_1', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
+  myCatalog.addSongToPlaylist('lista_2', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
 } catch (error){
   console.log(error);
 };
 console.log(myCatalog.getAllPlaylists());
 myCatalog.removeSongFromPlaylist('lista_1','title');
 console.log(myCatalog.getAllPlaylists());
-myCatalog.removePlaylist('lista_1')
+myCatalog.removePlaylist('lista')
 console.log(myCatalog.getAllPlaylists());
 
 
