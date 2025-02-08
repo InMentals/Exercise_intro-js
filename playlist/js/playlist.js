@@ -58,7 +58,13 @@ const musicCatalog = () => {
    * @param {{ title: string, artist: string, genre: string, duration: number }} song - The song to add to the playlist.
    * @throws {Error} If the playlist is not found.
    */
-  const addSongToPlaylist = (playlistName, song) => {};
+  const addSongToPlaylist = (playlistName, song) => {
+    const playlist = playlists.find(pl => pl.name === playlistName);
+    if(!playlist){
+      throw new Error('Playlist not found');
+    };
+    playlist.songs = [...playlist.songs, {...song, favorite: false}];
+  };
 
   /**
    * Removes a song from a specific playlist.
@@ -66,7 +72,10 @@ const musicCatalog = () => {
    * @param {string} title - The title of the song to remove.
    * @throws {Error} If the playlist or song is not found.
    */
-  const removeSongFromPlaylist = (playlistName, title) => {};
+  const removeSongFromPlaylist = (playlistName, title) => {
+    const playlist = playlists.find(pl => pl.name);
+    playlist.songs = playlist.songs.filter(song => song.title!== title);
+  }
 
   /**
    * Marks a song as a favorite or removes the favorite status.
@@ -91,8 +100,20 @@ const musicCatalog = () => {
 const myCatalog = musicCatalog();
 myCatalog.createPlaylist('lista_1');
 console.log(myCatalog.getAllPlaylists());
+
+try {
+  myCatalog.addSongToPlaylist('lista_1', {title :'title', artist: 'artist', genre: 'genre', duration: 4});
+  myCatalog.addSongToPlaylist('lista_1', {title :'title1', artist: 'artist1', genre: 'genre1', duration: 5});
+  myCatalog.addSongToPlaylist('lista_1', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
+} catch (error){
+  console.log(error);
+};
+console.log(myCatalog.getAllPlaylists());
+myCatalog.removeSongFromPlaylist('lista_1','title');
+console.log(myCatalog.getAllPlaylists());
 myCatalog.removePlaylist('lista_1')
 console.log(myCatalog.getAllPlaylists());
+
 
 
 export default musicCatalog;
