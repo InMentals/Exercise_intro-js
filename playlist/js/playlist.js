@@ -44,12 +44,7 @@ const musicCatalog = () => {
    * @param {string} playlistName - The name of the playlist to remove.
    */
     const removePlaylist = (playlistName) => {
-      const playlist = playlists.find(({name}) => name === playlistName);
-      if(!playlist){
-        throw new Error('Playlist not found');
-      };
       playlists = playlists.filter(playlist => playlist.name !== playlistName);
-
     };
 
   /**
@@ -82,10 +77,6 @@ const musicCatalog = () => {
     if(!playlist){
       throw new Error('Playlist not found');
     };
-    const song  = playlist.songs.find((song) => song.title === title);
-    if (!song){
-      throw new Error('Song not found');
-    };
     playlists = playlists.map((playListElement => {
       if (playListElement.name === playlistName){
         return {name: playListElement.name, 
@@ -102,14 +93,6 @@ const musicCatalog = () => {
    * @param {string} title - The title of the song to mark as a favorite.
    */
   const favoriteSong = (playlistName, title) => {
-    const playlist = playlists.find(({name}) => name === playlistName);
-    if(!playlist){
-      throw new Error('Playlist not found');
-    };
-    const song  = playlist.songs.find((song) => song.title === title);
-    if (!song){
-      throw new Error('Song not found');
-    };
     playlists = playlists.map((playListElement => {
       if (playListElement.name === playlistName){
         return {name: playListElement.name, songs: playListElement.songs.map(songElement => {
