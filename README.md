@@ -1,6 +1,6 @@
-# Java Script Exercices
+# JavaScript Exercises
 
-This repository contains the exercices for the module "Introducción a Java Script" 
-of the Keepcoding bootcamp "Desarrollo Web | Edición XVIII".
+This repository contains the exercises for the module *Introducción a JavaScript*  
+of the KeepCoding bootcamp *Desarrollo Web | Edición XVIII*.
 
-The statement of the exercises can be found in the file Exercise_web18.pdf
+The exercise statements can be found in the file *Exercise_web18.pdf*.
