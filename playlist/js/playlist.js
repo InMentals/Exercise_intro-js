@@ -118,7 +118,41 @@ const musicCatalog = () => {
    * @returns {Song[]} The list of sorted songs.
    * @throws {Error} If the playlist is not found or the criterion is invalid.
    */
-  const sortSongs = (playlistName, criterion) => {};
+  const sortSongs = (playlistName, criterion) => {
+    const playlist = playlists.find(({name}) => name === playlistName);
+    if(!playlist){
+      throw new Error('Playlist not found');
+    };
+    switch (criterion){
+      case 'title':
+        playlists = playlists.map((playListElement => {
+          if (playListElement.name === playlistName){
+            return {name: playListElement.name, songs: [...playListElement.songs].sort((a,b)=> a.title.localeCompare(b.title))};
+          };
+          return playListElement;
+        })); 
+        break;
+      case 'artist':
+        playlists = playlists.map((playListElement => {
+          if (playListElement.name === playlistName){
+            return {name: playListElement.name, songs: [...playListElement.songs].sort((a,b)=> a.artist.localeCompare(b.artist))};
+          };
+          return playListElement;
+        })); 
+        break;
+        case 'duration':
+          playlists = playlists.map((playListElement => {
+            if (playListElement.name === playlistName){
+              return {name: playListElement.name, songs: [...playListElement.songs].sort((a,b)=> a.duration - b.duration)};
+            };
+            return playListElement;
+          })); 
+          break;
+        default:
+          throw new Error('Criterion is invalid');
+    };
+
+  };
 
   return { createPlaylist, addSongToPlaylist, removeSongFromPlaylist, sortSongs, getAllPlaylists, removePlaylist, favoriteSong };
 };
@@ -133,8 +167,8 @@ console.log(myCatalog.getAllPlaylists());
 
 try {
   myCatalog.addSongToPlaylist('lista1', {title :'title', artist: 'artist', genre: 'genre', duration: 4});
+  myCatalog.addSongToPlaylist('lista1', {title :'title2', artist: 'artist2', genre: 'genre1', duration: 8});
   myCatalog.addSongToPlaylist('lista1', {title :'title1', artist: 'artist1', genre: 'genre1', duration: 5});
-  myCatalog.addSongToPlaylist('lista1', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
   myCatalog.addSongToPlaylist('lista2', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
 } catch (error){
   console.log(error);
@@ -144,8 +178,11 @@ myCatalog.removeSongFromPlaylist('lista1','title');
 console.log(myCatalog.getAllPlaylists());
 myCatalog.removePlaylist('lista2')
 console.log(myCatalog.getAllPlaylists());
-myCatalog.favoriteSong('lista1', 'title1');
+myCatalog.favoriteSong('lista1', 'title2');
 console.log(myCatalog.getAllPlaylists());
+myCatalog.sortSongs('lista1','duration');
+console.log(myCatalog.getAllPlaylists());
+
 
 
 
