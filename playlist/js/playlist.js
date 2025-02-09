@@ -77,6 +77,10 @@ const musicCatalog = () => {
     if(!playlist){
       throw new Error('Playlist not found');
     };
+    const song  = playlist.songs.find((song) => song.title === title);
+    if (!song){
+      throw new Error('Song not found');
+    };
     playlists = playlists.map((playListElement => {
       if (playListElement.name === playlistName){
         return {name: playListElement.name, 
