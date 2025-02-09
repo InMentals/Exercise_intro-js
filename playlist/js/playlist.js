@@ -80,7 +80,9 @@ const musicCatalog = () => {
     };
     playlists = playlists.map((playListElement => {
       if (playListElement.name === playlistName){
-        return {name: playListElement.name, songs: playListElement.songs.filter(song => song.title !== title)};
+        return {name: playListElement.name, 
+          songs: playListElement.songs.filter(song => song.title !== title)
+        };
       };
       return playListElement;
     }));
@@ -92,8 +94,26 @@ const musicCatalog = () => {
    * @param {string} title - The title of the song to mark as a favorite.
    */
   const favoriteSong = (playlistName, title) => {
-    const playlist = playlists.find(pl => pl.name === playlistName);
-    playlist.songs.find(song => song.title === title ).favorite = true;
+    const playlist = playlists.find(({name}) => name === playlistName);
+    if(!playlist){
+      throw new Error('Playlist not found');
+    };
+    const song  = playlist.songs.find((song) => song.title === title);
+    if (!song){
+      throw new Error('Song not found');
+    };
+    playlists = playlists.map((playListElement => {
+      if (playListElement.name === playlistName){
+        return {name: playListElement.name, songs: playListElement.songs.map(songElement => {
+          if(songElement.title === title){
+            return {...songElement, favorite: true};
+          };
+          return songElement;
+        })};
+      };
+      return playListElement;
+    }));
+
   }
 
   /**
@@ -112,22 +132,24 @@ const musicCatalog = () => {
 
 //test
 const myCatalog = musicCatalog();
-myCatalog.createPlaylist('lista_1');
-myCatalog.createPlaylist('lista_2');
+myCatalog.createPlaylist('lista1');
+myCatalog.createPlaylist('lista2');
 console.log(myCatalog.getAllPlaylists());
 
 try {
-  myCatalog.addSongToPlaylist('lista_1', {title :'title', artist: 'artist', genre: 'genre', duration: 4});
-  myCatalog.addSongToPlaylist('lista_1', {title :'title1', artist: 'artist1', genre: 'genre1', duration: 5});
-  myCatalog.addSongToPlaylist('lista_1', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
-  myCatalog.addSongToPlaylist('lista_2', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
+  myCatalog.addSongToPlaylist('lista1', {title :'title', artist: 'artist', genre: 'genre', duration: 4});
+  myCatalog.addSongToPlaylist('lista1', {title :'title1', artist: 'artist1', genre: 'genre1', duration: 5});
+  myCatalog.addSongToPlaylist('lista1', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
+  myCatalog.addSongToPlaylist('lista2', {title :'title2', artist: 'artist1', genre: 'genre1', duration: 5});
 } catch (error){
   console.log(error);
 };
 console.log(myCatalog.getAllPlaylists());
-myCatalog.removeSongFromPlaylist('lista_1','title');
+myCatalog.removeSongFromPlaylist('lista1','title');
 console.log(myCatalog.getAllPlaylists());
-myCatalog.removePlaylist('lista')
+myCatalog.removePlaylist('lista2')
+console.log(myCatalog.getAllPlaylists());
+myCatalog.favoriteSong('lista1', 'title1');
 console.log(myCatalog.getAllPlaylists());
 
 
